@@ -1,0 +1,770 @@
+openapi: 3.0.0
+info:
+  title: Swagger Fruitstore
+  description: |
+    fruitstore Server para el TP de TDL
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: http://localhost:8080
+tags:
+- name: producto
+  description: Gestion de productos
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: cliente
+  description: Gestion de clientes
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: combo
+  description: Gestion de combos de productos
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+- name: pedido
+  description: Gestion de pedido de productos
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+paths:
+  /producto:
+    get:
+      tags:
+      - producto
+      summary: Devuelve todos los productos
+      description: Trae todos los productos existentes
+      operationId: findAllProducts
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+        "400":
+          description: Invalid status value
+      security:
+      - fruitstore_auth:
+        - write:producto
+        - read:producto
+      x-swagger-router-controller: Producto
+    put:
+      tags:
+      - producto
+      summary: Actualizar un producto existente
+      operationId: updateProduct
+      requestBody:
+        $ref: '#/components/requestBodies/Producto'
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+        "405":
+          description: Validation exception
+      security:
+      - fruitstore_auth:
+        - write:producto
+        - read:producto
+      x-swagger-router-controller: Producto
+    post:
+      tags:
+      - producto
+      summary: Agregar un nuevo producto
+      operationId: addProduct
+      requestBody:
+        $ref: '#/components/requestBodies/Producto'
+      responses:
+        "405":
+          description: Invalid input
+      security:
+      - fruitstore_auth:
+        - write:producto
+        - read:producto
+      x-swagger-router-controller: Producto
+  /producto/{prodId}:
+    get:
+      tags:
+      - producto
+      summary: Encuentra productos por ID
+      description: Devuelve un solo producto
+      operationId: getProductById
+      parameters:
+      - name: prodId
+        in: path
+        description: ID del producto para devolver
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pet not found
+      security:
+      - api_key: []
+      x-swagger-router-controller: Producto
+    delete:
+      tags:
+      - producto
+      summary: Elimina un producto
+      operationId: deleteProduct
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: prodId
+        in: path
+        description: ID del producto a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+      security:
+      - fruitstore_auth:
+        - write:producto
+        - read:producto
+      x-swagger-router-controller: Producto
+  /cliente:
+    get:
+      tags:
+      - cliente
+      summary: Devuelve todos los clientes
+      description: Trae todos los clientes existentes
+      operationId: findAllClients
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+        "400":
+          description: Invalid status value
+      security:
+      - fruitstore_auth:
+        - write:cliente
+        - read:cliente
+      x-swagger-router-controller: Cliente
+    put:
+      tags:
+      - cliente
+      summary: Actualizar un cliente existente
+      operationId: updateClient
+      requestBody:
+        $ref: '#/components/requestBodies/Cliente'
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Product not found
+        "405":
+          description: Validation exception
+      security:
+      - fruitstore_auth:
+        - write:cliente
+        - read:cliente
+      x-swagger-router-controller: Cliente
+    post:
+      tags:
+      - cliente
+      summary: Agregar un nuevo cliente
+      operationId: addClient
+      requestBody:
+        $ref: '#/components/requestBodies/Cliente'
+      responses:
+        "405":
+          description: Invalid input
+      security:
+      - fruitstore_auth:
+        - write:cliente
+        - read:cliente
+      x-swagger-router-controller: Cliente
+  /cliente/{clienteId}:
+    get:
+      tags:
+      - cliente
+      summary: Encuentra cliente por ID
+      description: Devuelve un solo cliente
+      operationId: getClientById
+      parameters:
+      - name: clienteId
+        in: path
+        description: ID del cliente para devolver
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Client not found
+      security:
+      - api_key: []
+      x-swagger-router-controller: Cliente
+    delete:
+      tags:
+      - cliente
+      summary: Elimina un cliente
+      operationId: deleteClient
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: clienteId
+        in: path
+        description: ID del cliente a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Client not found
+      security:
+      - fruitstore_auth:
+        - write:cliente
+        - read:cliente
+      x-swagger-router-controller: Cliente
+  /combo:
+    get:
+      tags:
+      - combo
+      summary: Devuelve todos los combos
+      description: Trae todos los combos existentes
+      operationId: findAllCombos
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Combo'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Combo'
+        "400":
+          description: Invalid status value
+      security:
+      - fruitstore_auth:
+        - write:combo
+        - read:combo
+      x-swagger-router-controller: Combo
+    put:
+      tags:
+      - combo
+      summary: Actualizar un combo existente
+      operationId: updateCombo
+      requestBody:
+        $ref: '#/components/requestBodies/Combo'
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Combo not found
+        "405":
+          description: Validation exception
+      security:
+      - fruitstore_auth:
+        - write:combo
+        - read:combo
+      x-swagger-router-controller: Combo
+    post:
+      tags:
+      - combo
+      summary: Agregar un nuevo combo
+      operationId: addCombo
+      requestBody:
+        $ref: '#/components/requestBodies/Combo'
+      responses:
+        "405":
+          description: Invalid input
+      security:
+      - fruitstore_auth:
+        - write:combo
+        - read:combo
+      x-swagger-router-controller: Combo
+  /combo/{comboId}:
+    get:
+      tags:
+      - combo
+      summary: Encuentra combo por ID
+      description: Devuelve un solo combo
+      operationId: getComboById
+      parameters:
+      - name: comboId
+        in: path
+        description: ID del combo para devolver
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Combo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Combo'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Combo not found
+      security:
+      - api_key: []
+      x-swagger-router-controller: Combo
+    delete:
+      tags:
+      - combo
+      summary: Elimina un Combo
+      operationId: deleteCombo
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: comboId
+        in: path
+        description: ID del combo a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Combo not found
+      security:
+      - fruitstore_auth:
+        - write:combo
+        - read:combo
+      x-swagger-router-controller: Combo
+  /pedido:
+    get:
+      tags:
+      - pedido
+      summary: Devuelve todos los pedidos
+      description: Trae todos los pedidos existentes
+      operationId: findAllPedidos
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+        "400":
+          description: Invalid status value
+      security:
+      - fruitstore_auth:
+        - write:pedido
+        - read:pedido
+      x-swagger-router-controller: Pedido
+    put:
+      tags:
+      - pedido
+      summary: Actualizar un pedido existente
+      operationId: updatePedido
+      requestBody:
+        $ref: '#/components/requestBodies/Pedido'
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pedido not found
+        "405":
+          description: Validation exception
+      security:
+      - fruitstore_auth:
+        - write:pedido
+        - read:pedido
+      x-swagger-router-controller: Pedido
+    post:
+      tags:
+      - pedido
+      summary: Agregar un nuevo pedido
+      operationId: addPedido
+      requestBody:
+        $ref: '#/components/requestBodies/Pedido'
+      responses:
+        "405":
+          description: Invalid input
+      security:
+      - fruitstore_auth:
+        - write:pedido
+        - read:pedido
+      x-swagger-router-controller: Pedido
+  /pedido/{pedidoId}:
+    get:
+      tags:
+      - pedido
+      summary: Encuentra pedido por ID
+      description: Devuelve un solo pedido
+      operationId: getPedidoById
+      parameters:
+      - name: pedidoId
+        in: path
+        description: ID del pedido para devolver
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pedido not found
+      security:
+      - api_key: []
+      x-swagger-router-controller: Pedido
+    delete:
+      tags:
+      - pedido
+      summary: Elimina un Pedido
+      operationId: deletePedido
+      parameters:
+      - name: api_key
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: pedidoId
+        in: path
+        description: ID del pedido a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Pedido not found
+      security:
+      - fruitstore_auth:
+        - write:pedido
+        - read:pedido
+      x-swagger-router-controller: Pedido
+components:
+  schemas:
+    Producto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+          example: banana
+        precio:
+          type: number
+          format: float
+        descripcion:
+          type: string
+      example:
+        descripcion: descripcion
+        precio: 6.0274563
+        id: 0
+        nombre: banana
+      xml:
+        name: Producto
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        us_telegram:
+          type: string
+        direccion:
+          type: string
+        mail:
+          type: string
+      example:
+        us_telegram: us_telegram
+        mail: mail
+        direccion: direccion
+        id: 0
+        nombre: nombre
+      xml:
+        name: Cliente
+    Item-producto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        producto:
+          type: integer
+          format: int64
+        cantidad:
+          type: integer
+          format: int64
+      example:
+        id: 6
+        producto: 1
+        cantidad: 5
+      xml:
+        name: Item-producto
+    Item-combo:
+      type: object
+      properties:
+        producto:
+          type: integer
+          format: int64
+        cantidad:
+          type: integer
+          format: int64
+      example:
+        producto: 6
+        cantidad: 1
+      xml:
+        name: Item-combo
+    Combo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        items-combo:
+          type: array
+          xml:
+            name: items-combo
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Item-combo'
+        precio:
+          type: integer
+          format: int64
+      example:
+        precio: 5
+        items-combo:
+        - producto: 6
+          cantidad: 1
+        - producto: 6
+          cantidad: 1
+        id: 0
+      xml:
+        name: Combo
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        productos:
+          type: array
+          xml:
+            name: productos
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Item-producto'
+        combos:
+          type: array
+          xml:
+            name: combos
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Item-combo'
+        precio:
+          type: integer
+          format: int64
+        cliente:
+          type: integer
+          format: int64
+        estado:
+          type: string
+          description: Estado del pedido
+          enum:
+          - calle
+          - pendiente
+          - entregado
+      example:
+        cliente: 2
+        precio: 5
+        estado: calle
+        combos:
+        - producto: 6
+          cantidad: 1
+        - producto: 6
+          cantidad: 1
+        id: 0
+        productos:
+        - id: 6
+          producto: 1
+          cantidad: 5
+        - id: 6
+          producto: 1
+          cantidad: 5
+      xml:
+        name: Pedido
+  requestBodies:
+    Producto:
+      description: Producto para agregar
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Producto'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Producto'
+      required: true
+    Cliente:
+      description: Cliente para agregar
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Cliente'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Cliente'
+      required: true
+    Combo:
+      description: Combo para agregar
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Combo'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Combo'
+      required: true
+    Pedido:
+      description: Pedido para agregar
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pedido'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Pedido'
+      required: true
+  securitySchemes:
+    fruitstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes:
+            write:producto: modifica productos en tu cuenta
+            read:producto: lee tus productos
+            write:cliente: modifica clientes en tu cuenta
+            read:cliente: lee tus clientes
+            write:combo: modifica combo en tu cuenta
+            read:combo: lee tus combo
+            write:pedido: modifica pedido en tu cuenta
+            read:pedido: lee tus pedido
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
