@@ -38,46 +38,42 @@ exports.findAllPedidos = function() {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ {
-  "cliente" : 2,
+  "cliente" : 5,
   "precio" : 5,
   "estado" : "calle",
   "combos" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0,
   "productos" : [ {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   }, {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   } ]
 }, {
-  "cliente" : 2,
+  "cliente" : 5,
   "precio" : 5,
   "estado" : "calle",
   "combos" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0,
   "productos" : [ {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   }, {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   } ]
 } ];
     if (Object.keys(examples).length > 0) {
@@ -100,25 +96,23 @@ exports.getPedidoById = function(pedidoId) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-  "cliente" : 2,
+  "cliente" : 5,
   "precio" : 5,
   "estado" : "calle",
   "combos" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0,
   "productos" : [ {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   }, {
-    "id" : 6,
-    "producto" : 1,
-    "cantidad" : 5
+    "id_producto" : 6,
+    "cantidad" : 1
   } ]
 };
     if (Object.keys(examples).length > 0) {

@@ -40,20 +40,20 @@ exports.findAllCombos = function() {
     examples['application/json'] = [ {
   "precio" : 5,
   "items-combo" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0
 }, {
   "precio" : 5,
   "items-combo" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0
@@ -80,10 +80,10 @@ exports.getComboById = function(comboId) {
     examples['application/json'] = {
   "precio" : 5,
   "items-combo" : [ {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   }, {
-    "producto" : 6,
+    "id_producto" : 6,
     "cantidad" : 1
   } ],
   "id" : 0

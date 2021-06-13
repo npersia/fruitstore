@@ -9,8 +9,7 @@
  **/
 exports.addProduct = function(body) {
   return new Promise(function(resolve, reject) {
-    /*resolve();*/
-    console.log("hola mundo");
+    resolve();
   });
 }
 
