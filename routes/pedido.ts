@@ -55,10 +55,10 @@ class Pedido {
 
                 const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
                 for (const p of pedidos) {
-                    const pedidoProducto = await pedidoProductoRepository.find({pedido: p.id});
+                    const pedidoProducto = await pedidoProductoRepository.find({pedido: p});
 
                     for (const pedProd of pedidoProducto) {
-                        this.aux.push({id_producto: pedProd.producto, cantidad: pedProd.cantidad});
+                        this.aux.push({id_producto: pedProd.id, cantidad: pedProd.cantidad});
                     }
 
                     /**/
@@ -88,27 +88,26 @@ class Pedido {
             // @ts-ignore
             conexion.then(async (connection) => {
                 const pedidoRepository = connection.getRepository(EPedido);
-                const pedido = await pedidoRepository.findOne({ id: req.params.id });
+                const unPedido = await pedidoRepository.findOne({ id: req.params.id });
 
                 // tslint:disable-next-line:prefer-const
 
 
 
                 const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
-                const pedidoProducto = await pedidoProductoRepository.find({ pedido: pedido.id });
+                const pedidoProducto = await pedidoProductoRepository.find({ pedido: unPedido });
 
 
                 for (const pedProd of pedidoProducto) {
-                    this.aux.push({id_producto: pedProd.producto, cantidad: pedProd.cantidad });
+                    this.aux.push({id_producto: pedProd.id, cantidad: pedProd.cantidad });
                 }
 
-/**/
                 this.pedidoRet.push({
-                    id: pedido.id,
-                    precio : pedido.precio,
+                    id: unPedido.id,
+                    precio : unPedido.precio,
                     // tslint:disable-next-line:object-literal-sort-keys
-                    cliente : pedido.cliente,
-                    estado : pedido.estado,
+                    cliente : unPedido.cliente,
+                    estado : unPedido.estado,
                     productos: this.aux,
                 });
 
@@ -137,7 +136,7 @@ class Pedido {
                 const clienteRepository = connection.getRepository(ECliente);
                 const cliente = await clienteRepository.findOne({ id: req.body.cliente });
 
-                pedido.cliente = cliente.id;
+                pedido.cliente = cliente;
                 /**/
 
                 const pedidoRepository = connection.getRepository(EPedido);
@@ -147,10 +146,10 @@ class Pedido {
 
                 for (const prod of req.body.productos) {
                     const pedidoProducto = new EPedidoProducto();
-                    pedidoProducto.pedido = req.body.id;
+                    pedidoProducto.pedido = pedido;
                     const productoRepository = connection.getRepository(EProducto);
                     const producto = await productoRepository.findOne({ id: prod.id_producto });
-                    pedidoProducto.producto = producto.id;
+                    pedidoProducto.producto = producto;
                     pedidoProducto.cantidad = prod.cantidad;
                     const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
                     await pedidoProductoRepository.save(pedidoProducto);
@@ -169,7 +168,7 @@ class Pedido {
                 const pedidoDelete = await pedidoRepository.findOne({ id: req.params.id });
 
                 const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
-                const pedidoProductoDeleteList = await pedidoProductoRepository.find({ pedido: pedidoDelete.id });
+                const pedidoProductoDeleteList = await pedidoProductoRepository.find({ pedido: pedidoDelete });
 
                 for (const pedProd of pedidoProductoDeleteList) {
                     await pedidoProductoRepository.remove(pedProd);

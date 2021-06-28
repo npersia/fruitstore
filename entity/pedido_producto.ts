@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {ECliente} from "./cliente";
 import { EPedido } from "./pedido";
 import { EProducto } from "./producto";
 
@@ -7,11 +8,11 @@ export class EPedidoProducto {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column("integer")
-    public pedido: number;
+    @ManyToOne(() => EPedido)
+    public pedido: EPedido;
 
-    @Column("integer")
-    public producto: number;
+    @ManyToOne(() => EProducto)
+    public producto: EProducto;
 
     @Column("integer")
     // tslint:disable-next-line:variable-name

@@ -13,8 +13,9 @@ export class EPedido {
     @Column("real")
     public precio: number;
 
-    @Column("integer")
-    public cliente: number;
+    // @Column("integer")
+    @ManyToOne(() => ECliente)
+    public cliente: ECliente;
 
     @Column("varchar")
     public estado: string;
