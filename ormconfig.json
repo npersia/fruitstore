@@ -1,0 +1,10 @@
+{"type": "postgres",
+"host": "postgres",
+"port": 5432,
+"username": "postgres",
+"password": "mypassword",
+"database": "postgres",
+"entities": [
+"entity/cliente.ts", "entity/pedido.ts", "entity/producto.ts"],
+  "synchronize": true
+}

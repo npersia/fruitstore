@@ -1,20 +1,39 @@
 {
-  "name": "swagger-fruitstore",
+  "name": "user_api",
   "version": "1.0.0",
-  "description": "fruitstore Server para el TP de TDL ",
-  "main": "index.js",
+  "description": "sample rest api",
+  "main": "index.ts",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "start": "ts-node index.ts",
+    "start:dev": "./node_modules/nodemon/bin/nodemon.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tslint": "tslint --project tsconfig.json --config tslint.json",
+    "tslint-fix": "tslint --project tsconfig.json --config tslint.json --fix"
   },
-  "keywords": [
-    "swagger"
-  ],
-  "license": "Unlicense",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbachi/prod-ready-node-rest-api-typescript.git"
+  },
+  "author": "Bhargav Bachina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bbachi/prod-ready-node-rest-api-typescript/issues"
+  },
+  "homepage": "https://github.com/bbachi/prod-ready-node-rest-api-typescript#readme",
   "dependencies": {
-    "connect": "^3.2.0",
-    "js-yaml": "^3.3.0",
-    "oas3-tools": "^2.2.3"
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "nodemon": "^1.18.10",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.4",
+    "webpack-cli": "^3.2.3",
+    "typeorm": "latest",
+    "reflect-metadata": "latest",
+    "@types/node": "latest",
+    "pg": "latest"
   }
 }
