@@ -250,8 +250,35 @@ paths:
         - fruitstore_auth:
             - 'write:pedido'
             - 'read:pedido'
+  '/pedido/estado/{pedidoId}':
+    put:
+      tags:
+        - pedido
+      summary: Actualizar el estado de un pedido
+      operationId: updateEstadoPedido
+      parameters:
+        - name: pedidoId
+          in: path
+          description: ID del pedido para devolver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+        '405':
+          description: Validation exception
+      security:
+        - fruitstore_auth:
+            - 'write:pedido'
+            - 'read:pedido'
+      requestBody:
+        $ref: '#/components/requestBodies/Pedido'
 
-  '/pedido/{us_telegram}':
+  '/pedido/telegram/{us_telegram}':
     put:
       tags:
         - pedido

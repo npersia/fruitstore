@@ -126,7 +126,27 @@ class Pedido {
 
         });
 
-        this.express.put("/:us_telegram", (req, res, next) => {
+
+        this.express.put("/estado/:id", (req, res, next) => {
+            this.logger.info("url:::::::" + req.url);
+            // tslint:disable-next-line:only-arrow-function
+            conexion.then(async (connection) => {
+                const pedidoRepository = connection.getRepository(EPedido);
+                const pedidoUpdate = await pedidoRepository.findOne(
+                    { id: req.params.id });
+                // tslint:disable-next-line:no-unused-expression
+                pedidoUpdate.estado = req.body.estado;
+                await pedidoRepository.save(pedidoUpdate);
+                res.json(pedidoUpdate);
+
+                // tslint:disable-next-line:no-console
+            }).catch((error) => console.log(error));
+
+        });
+
+/**/
+
+        this.express.put("/telegram/:us_telegram", (req, res, next) => {
             this.logger.info("url:::::::" + req.url);
             // tslint:disable-next-line:only-arrow-function
             conexion.then(async (connection) => {
