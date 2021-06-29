@@ -1,21 +1,32 @@
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn} from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    PrimaryColumn,
+    PrimaryGeneratedColumn
+} from "typeorm";
 import {ECliente} from "./cliente";
-import {EProducto} from "./producto";
 import {EPedidoProducto} from "./pedido_producto";
-
+import {EProducto} from "./producto";
 
 @Entity()
 export class EPedido {
 
-    @PrimaryColumn("integer")
+    @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column("real")
+    @Column("real", {nullable: true })
     public precio: number;
 
-    // @Column("integer")
-    @ManyToOne(() => ECliente)
-    public cliente: ECliente;
+    @Column("varchar", {nullable: true })
+    // tslint:disable-next-line:variable-name
+    public us_telegram: string;
+
+    @Column("varchar", {nullable: true })
+    public direccion: string;
 
     @Column("varchar")
     public estado: string;

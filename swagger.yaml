@@ -21,19 +21,12 @@ tags:
     externalDocs:
       description: Find out more
       url: 'http://swagger.io'
-      
-  - name: cliente
-    description: Gestion de clientes
-    externalDocs:
-      description: Find out more
-      url: 'http://swagger.io'
-  
 
   - name: pedido
     description: Gestion de pedido de productos
     externalDocs:
       description: Find out more
-      url: 'http://swagger.io'  
+      url: 'http://swagger.io'
 paths:
   /producto:
     post:
@@ -51,8 +44,8 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/Producto'
 
-        
-        
+
+
     get:
       tags:
         - producto
@@ -160,137 +153,7 @@ paths:
             - 'read:producto'
       requestBody:
         $ref: '#/components/requestBodies/Producto'
-        
-        
-        
 
-
-
-  /cliente:
-    post:
-      tags:
-        - cliente
-      summary: Agregar un nuevo cliente
-      operationId: addClient
-      responses:
-        '405':
-          description: Invalid input
-      security:
-        - fruitstore_auth:
-            - 'write:cliente'
-            - 'read:cliente'
-      requestBody:
-        $ref: '#/components/requestBodies/Cliente'
-
-        
-        
-    get:
-      tags:
-        - cliente
-      summary: Devuelve todos los clientes
-      description: Trae todos los clientes existentes
-      operationId: findAllClients
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Invalid status value
-      security:
-        - fruitstore_auth:
-            - 'write:cliente'
-            - 'read:cliente'        
-        
-
-  '/cliente/{clienteId}':
-    get:
-      tags:
-        - cliente
-      summary: Encuentra cliente por ID
-      description: Devuelve un solo cliente
-      operationId: getClientById
-      parameters:
-        - name: clienteId
-          in: path
-          description: ID del cliente para devolver
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Client not found
-      security:
-        - api_key: []
-    delete:
-      tags:
-        - cliente
-      summary: Elimina un cliente
-      operationId: deleteClient
-      parameters:
-        - name: clienteId
-          in: path
-          description: ID del cliente a eliminar
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Client not found
-      security:
-        - fruitstore_auth:
-            - 'write:cliente'
-            - 'read:cliente'
-    put:
-      tags:
-        - cliente
-      summary: Actualizar un cliente existente
-      operationId: updateClient
-      parameters:
-        - name: clienteId
-          in: path
-          description: ID del cliente para devolver
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Product not found
-        '405':
-          description: Validation exception
-      security:
-        - fruitstore_auth:
-            - 'write:cliente'
-            - 'read:cliente'
-      requestBody:
-        $ref: '#/components/requestBodies/Cliente'
 
   /pedido:
     post:
@@ -307,7 +170,7 @@ paths:
             - 'read:pedido'
       requestBody:
         $ref: '#/components/requestBodies/Pedido'
-        
+
     get:
       tags:
         - pedido
@@ -333,7 +196,7 @@ paths:
       security:
         - fruitstore_auth:
             - 'write:pedido'
-            - 'read:pedido'        
+            - 'read:pedido'
   '/pedido/{pedidoId}':
     get:
       tags:
@@ -388,6 +251,34 @@ paths:
             - 'write:pedido'
             - 'read:pedido'
 
+  '/pedido/{us_telegram}':
+    put:
+      tags:
+        - pedido
+      summary: Actualizar la direccion de un pedido existente
+      operationId: updatePedido
+      parameters:
+        - name: us_telegram
+          in: path
+          description: Usuario de telegram del cliente
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+        '405':
+          description: Validation exception
+      security:
+        - fruitstore_auth:
+            - 'write:pedido'
+            - 'read:pedido'
+      requestBody:
+        $ref: '#/components/requestBodies/Pedido'
+
+
 
 
 
@@ -412,22 +303,6 @@ components:
           type: string
       xml:
         name: Producto
-    Cliente:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        nombre:
-          type: string
-        us_telegram:
-          type: string
-        direccion:
-          type: string
-        mail:
-          type: string
-      xml:
-        name: Cliente
     Item-producto:
       type: object
       properties:
@@ -456,9 +331,10 @@ components:
         precio:
           type: integer
           format: int64
-        cliente:
-          type: integer
-          format: int64
+        us_telegram:
+          type: string
+        direccion:
+          type: string
         estado:
           type: string
           description: Estado del pedido
@@ -485,20 +361,9 @@ components:
           schema:
             $ref: '#/components/schemas/Producto'
       description: Producto para agregar
-      required: true  
-    Cliente:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Cliente'
-        application/xml:
-          schema:
-            $ref: '#/components/schemas/Cliente'
-      description: Cliente para agregar
-      required: true 
-      
-      
-      
+      required: true
+
+
     Pedido:
       content:
         application/json:
@@ -508,8 +373,8 @@ components:
           schema:
             $ref: '#/components/schemas/Pedido'
       description: Pedido para agregar
-      required: true 
-  
+      required: true
+
   securitySchemes:
     fruitstore_auth:
       type: oauth2
@@ -522,7 +387,7 @@ components:
             'write:cliente': modifica clientes en tu cuenta
             'read:cliente': lee tus clientes
             'write:pedido': modifica pedido en tu cuenta
-            'read:pedido': lee tus pedido             
+            'read:pedido': lee tus pedido
     api_key:
       type: apiKey
       name: api_key

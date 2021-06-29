@@ -3,7 +3,6 @@ curl -X 'POST' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": 0,
   "productos": [
     {
       "id_producto": 2,
@@ -14,6 +13,6 @@ curl -X 'POST' \
       "cantidad": 2
     }
   ],
-  "cliente": 1,
+  "us_telegram": "npersia",
   "estado": "calle"
 }'

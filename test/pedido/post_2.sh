@@ -3,13 +3,16 @@ curl -X 'POST' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": 1,
   "productos": [
     {
       "id_producto": 2,
       "cantidad": 5
+    },
+    {
+      "id_producto": 1,
+      "cantidad": 2
     }
   ],
-  "cliente": 1,
+  "us_telegram": "npersia",
   "estado": "calle"
 }'

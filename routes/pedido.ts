@@ -64,10 +64,13 @@ class Pedido {
                     /**/
                     this.pedidoRet.push({
                         id: p.id,
-                        precio: p.precio,
+                        precio : p.precio,
                         // tslint:disable-next-line:object-literal-sort-keys
-                        cliente: p.cliente,
-                        estado: p.estado,
+                        us_telegram: p.us_telegram,
+                        // tslint:disable-next-line:object-literal-sort-keys
+                        direccion: p.direccion,
+                        // tslint:disable-next-line:object-literal-sort-keys
+                        estado : p.estado,
                         productos: this.aux,
                     });
                     this.aux = [];
@@ -106,7 +109,10 @@ class Pedido {
                     id: unPedido.id,
                     precio : unPedido.precio,
                     // tslint:disable-next-line:object-literal-sort-keys
-                    cliente : unPedido.cliente,
+                    us_telegram: unPedido.us_telegram,
+                    // tslint:disable-next-line:object-literal-sort-keys
+                    direccion: unPedido.direccion,
+                    // tslint:disable-next-line:object-literal-sort-keys
                     estado : unPedido.estado,
                     productos: this.aux,
                 });
@@ -120,6 +126,36 @@ class Pedido {
 
         });
 
+        this.express.put("/:us_telegram", (req, res, next) => {
+            this.logger.info("url:::::::" + req.url);
+            // tslint:disable-next-line:only-arrow-function
+            conexion.then(async (connection) => {
+                const pedidoRepository = connection.getRepository(EPedido);
+                const pedidoUpdates = await pedidoRepository.find(
+                    { us_telegram: req.params.us_telegram, direccion : null });
+
+                for (const p of pedidoUpdates) {
+                    p.direccion = req.body.direccion;
+                    await pedidoRepository.save(p);
+                }
+                res.json(pedidoUpdates);
+
+                // tslint:disable-next-line:no-console
+            }).catch((error) => console.log(error));
+
+            // this.clientes.filter(function(unCliente) {
+            //     if (req.body.id === unCliente.id) {
+            //         unCliente.nombre = req.body.nombre;
+            //         unCliente.us_telegram = req.body.us_telegram;
+            //         unCliente.direccion = req.body.direccion;
+            //         unCliente.mail = req.body.mail;
+            //     }
+            // });
+
+        });
+
+
+
 
         // Agregar un nuevo pedido
         // req.body has object of type {id: 5, nombre: "banana", precio: "25", descripcion: "Banana de Ecuador"}
@@ -129,14 +165,11 @@ class Pedido {
 
             conexion.then(async (connection) => {
                 const pedido = new EPedido();
-                pedido.id = req.body.id;
+
                 pedido.estado = req.body.estado;
-                pedido.precio = 0;
+                pedido.us_telegram = req.body.us_telegram;
+/**/
 
-                const clienteRepository = connection.getRepository(ECliente);
-                const cliente = await clienteRepository.findOne({ id: req.body.cliente });
-
-                pedido.cliente = cliente;
                 /**/
 
                 const pedidoRepository = connection.getRepository(EPedido);
@@ -154,11 +187,11 @@ class Pedido {
                     const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
                     await pedidoProductoRepository.save(pedidoProducto);
                 }
+                res.json(pedido);
                 // tslint:disable-next-line:no-console
             }).catch((error) => console.log(error));
-            res.json(req.body);
         });
-
+/**/
         // Elimina un  pedido
         this.express.delete("/:id", (req, res, next) => {
             this.logger.info("url:::::::" + req.url);

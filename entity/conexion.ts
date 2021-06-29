@@ -14,7 +14,7 @@ export let conexion = createConnection({
     password: "mypassword",
     database: "postgres",
     entities: [
-        ECliente, EPedido, EProducto, EPedidoProducto],
+        EPedido, EProducto, EPedidoProducto],
     synchronize: true,
     logging: false});
 // export let conexion = createConnection({
