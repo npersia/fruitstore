@@ -12,6 +12,7 @@ RUN npm install -g typeorm
 RUN npm install -g reflect-metadata
 RUN npm install -g @types/node
 RUN npm install -g pg
+RUN npm install -g fruitstore_lib
 RUN typeorm init
 
 # copying all the files from your file system to container file system

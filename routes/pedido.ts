@@ -1,13 +1,13 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
+import {calculoComplejo} from "fruitstore_lib";
 import {Column, JoinColumn, OneToOne} from "typeorm";
 import {ECliente} from "../entity/cliente";
 import {conexion} from "../entity/conexion";
-import {EPedidoProducto} from "../entity/pedido_producto";
-import { Logger } from "../logger/logger";
 import { EPedido } from "../entity/pedido";
+import {EPedidoProducto} from "../entity/pedido_producto";
 import { EProducto } from "../entity/producto";
-
+import { Logger } from "../logger/logger";
 
 // tslint:disable-next-line:max-classes-per-file
 class Pedido {
@@ -22,6 +22,7 @@ class Pedido {
     // tslint:disable-next-line:max-line-length
     public pedidoRet: any[];
     public aux: any[];
+    public preciocantidad: any[];
 
 /**/
     constructor() {
@@ -34,6 +35,7 @@ class Pedido {
                 precio: 240, cliente: 7, estado: "pendiente"}];
         this.pedidoRet = [];
         this.aux = [];
+        this.preciocantidad = [];
 
         this.logger = new Logger();
     }
@@ -55,16 +57,19 @@ class Pedido {
 
                 const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
                 for (const p of pedidos) {
-                    const pedidoProducto = await pedidoProductoRepository.find({pedido: p});
+                    const pedidoProducto = await pedidoProductoRepository.find({ relations : ["producto", "pedido"]});
 
                     for (const pedProd of pedidoProducto) {
-                        this.aux.push({id_producto: pedProd.id, cantidad: pedProd.cantidad});
+                        // @ts-ignore
+                        if (pedProd.pedido.id === p.id) {
+                            this.aux.push({id_producto: pedProd.producto.id, cantidad: pedProd.cantidad});
+                            this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
+                        }
                     }
 
-                    /**/
                     this.pedidoRet.push({
                         id: p.id,
-                        precio : p.precio,
+                        precio : calculoComplejo(this.preciocantidad),
                         // tslint:disable-next-line:object-literal-sort-keys
                         us_telegram: p.us_telegram,
                         // tslint:disable-next-line:object-literal-sort-keys
@@ -74,9 +79,10 @@ class Pedido {
                         productos: this.aux,
                     });
                     this.aux = [];
+                    this.preciocantidad = [];
 
                 }
-/**/
+
                 res.json(this.pedidoRet);
                 this.pedidoRet = [];
                 // tslint:disable-next-line:no-console
@@ -87,27 +93,24 @@ class Pedido {
             this.logger.info("url:::::::" + req.url);
             // tslint:disable-next-line:only-arrow-functions
 
-
             // @ts-ignore
             conexion.then(async (connection) => {
                 const pedidoRepository = connection.getRepository(EPedido);
                 const unPedido = await pedidoRepository.findOne({ id: req.params.id });
 
-                // tslint:disable-next-line:prefer-const
-
-
-
                 const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
-                const pedidoProducto = await pedidoProductoRepository.find({ pedido: unPedido });
-
+                const pedidoProducto = await pedidoProductoRepository.find({ relations : ["producto", "pedido"]});
 
                 for (const pedProd of pedidoProducto) {
-                    this.aux.push({id_producto: pedProd.id, cantidad: pedProd.cantidad });
+                    if (pedProd.pedido.id === unPedido.id) {
+                        this.aux.push({id_producto: pedProd.producto.id, cantidad: pedProd.cantidad});
+                        this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
+                    }
                 }
 
                 this.pedidoRet.push({
                     id: unPedido.id,
-                    precio : unPedido.precio,
+                    precio : calculoComplejo(this.preciocantidad),
                     // tslint:disable-next-line:object-literal-sort-keys
                     us_telegram: unPedido.us_telegram,
                     // tslint:disable-next-line:object-literal-sort-keys
@@ -120,12 +123,10 @@ class Pedido {
                 res.json(this.pedidoRet[0]);
                 this.aux = [];
                 this.pedidoRet = [];
+                this.preciocantidad = [];
                 // tslint:disable-next-line:no-console
             }).catch((error) => console.log(error));
-
-
         });
-
 
         this.express.put("/estado/:id", (req, res, next) => {
             this.logger.info("url:::::::" + req.url);
@@ -150,16 +151,20 @@ class Pedido {
             this.logger.info("url:::::::" + req.url);
             // tslint:disable-next-line:only-arrow-function
             conexion.then(async (connection) => {
+                const pedidos = await connection
+                    .getRepository(EPedido)
+                    .createQueryBuilder("ejemplo")
+                    .where("us_telegram = :telegram")
+                    .orderBy("id", "DESC")
+                    .setParameters({telegram: req.params.us_telegram})
+                    .getMany();
+
+
                 const pedidoRepository = connection.getRepository(EPedido);
-                const pedidoUpdates = await pedidoRepository.find(
-                    { us_telegram: req.params.us_telegram, direccion : null });
-
-                for (const p of pedidoUpdates) {
-                    p.direccion = req.body.direccion;
-                    await pedidoRepository.save(p);
-                }
-                res.json(pedidoUpdates);
-
+                pedidos[0].direccion = req.body.direccion;
+                await pedidoRepository.save(pedidos[0]);
+                res.json(pedidos[0]);
+/**/
                 // tslint:disable-next-line:no-console
             }).catch((error) => console.log(error));
 
@@ -174,21 +179,16 @@ class Pedido {
 
         });
 
-
-
-
         // Agregar un nuevo pedido
         // req.body has object of type {id: 5, nombre: "banana", precio: "25", descripcion: "Banana de Ecuador"}
         this.express.post("/", (req, res, next) => {
             this.logger.info("url:::::::" + req.url);
 
-
             conexion.then(async (connection) => {
                 const pedido = new EPedido();
 
-                pedido.estado = req.body.estado;
+                pedido.estado = "en preparacion";
                 pedido.us_telegram = req.body.us_telegram;
-/**/
 
                 /**/
 

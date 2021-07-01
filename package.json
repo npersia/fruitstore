@@ -34,6 +34,7 @@
     "typeorm": "latest",
     "reflect-metadata": "latest",
     "@types/node": "latest",
-    "pg": "latest"
+    "pg": "latest",
+    "fruitstore_lib": "latest"
   }
 }
