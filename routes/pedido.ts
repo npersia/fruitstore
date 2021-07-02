@@ -63,13 +63,13 @@ class Pedido {
                         // @ts-ignore
                         if (pedProd.pedido.id === p.id) {
                             this.aux.push({id_producto: pedProd.producto.id, cantidad: pedProd.cantidad});
-                            this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
+                            // this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
                         }
                     }
 
                     this.pedidoRet.push({
                         id: p.id,
-                        precio : calculoComplejo(this.preciocantidad),
+                        precio : p.precio,
                         // tslint:disable-next-line:object-literal-sort-keys
                         us_telegram: p.us_telegram,
                         // tslint:disable-next-line:object-literal-sort-keys
@@ -104,13 +104,13 @@ class Pedido {
                 for (const pedProd of pedidoProducto) {
                     if (pedProd.pedido.id === unPedido.id) {
                         this.aux.push({id_producto: pedProd.producto.id, cantidad: pedProd.cantidad});
-                        this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
+                        // this.preciocantidad.push({precio: pedProd.producto.precio, cantidad: pedProd.cantidad});
                     }
                 }
 
                 this.pedidoRet.push({
                     id: unPedido.id,
-                    precio : calculoComplejo(this.preciocantidad),
+                    precio : unPedido.precio,
                     // tslint:disable-next-line:object-literal-sort-keys
                     us_telegram: unPedido.us_telegram,
                     // tslint:disable-next-line:object-literal-sort-keys
@@ -194,8 +194,11 @@ class Pedido {
 
                 const pedidoRepository = connection.getRepository(EPedido);
 
-                // first we should save a photo
                 await pedidoRepository.save(pedido);
+
+                // first we should save a photo
+
+/**/
 
                 for (const prod of req.body.productos) {
                     const pedidoProducto = new EPedidoProducto();
@@ -203,15 +206,20 @@ class Pedido {
                     const productoRepository = connection.getRepository(EProducto);
                     const producto = await productoRepository.findOne({ id: prod.id_producto });
                     pedidoProducto.producto = producto;
+                    this.preciocantidad.push({precio: producto.precio, cantidad: prod.cantidad});
                     pedidoProducto.cantidad = prod.cantidad;
                     const pedidoProductoRepository = connection.getRepository(EPedidoProducto);
                     await pedidoProductoRepository.save(pedidoProducto);
                 }
+
+                pedido.precio = calculoComplejo(this.preciocantidad);
+                await pedidoRepository.save(pedido);
+                this.preciocantidad = [];
                 res.json(pedido);
                 // tslint:disable-next-line:no-console
             }).catch((error) => console.log(error));
         });
-/**/
+
         // Elimina un  pedido
         this.express.delete("/:id", (req, res, next) => {
             this.logger.info("url:::::::" + req.url);
